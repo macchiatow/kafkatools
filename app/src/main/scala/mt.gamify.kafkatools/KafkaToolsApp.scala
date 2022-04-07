@@ -1,10 +1,10 @@
 package mt.gamify.kafkatools
 
 import java.util.concurrent.atomic.AtomicInteger
+import scala.collection.JavaConverters._
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
 import scala.sys.exit
-import scala.collection.JavaConverters._
 
 object KafkaToolsApp extends App {
 
@@ -20,8 +20,8 @@ object KafkaToolsApp extends App {
       producer.publishRandom(topic, 10 seconds)
       producer.close()
     // consumer mode
-    case Options(bootstrapServer, topic, _, _) =>
-      val consumer = new KafkaConsumer(bootstrapServer, "test.group")
+    case Options(bootstrapServer, topic, groupId, _) =>
+      val consumer = new KafkaConsumer(bootstrapServer, groupId.getOrElse("test.group"))
 
       consumer.checkConnectivity().failed.foreach { e =>
         println(e.getMessage)
